@@ -16,6 +16,7 @@ class ViewController: UIViewController {
   
   @IBOutlet weak var tableView: UITableView!
   var coreDataStack: CoreDataStack!
+    var fetchRequest: NSFetchRequest!
   
   override func viewDidLoad() {
     super.viewDidLoad()
