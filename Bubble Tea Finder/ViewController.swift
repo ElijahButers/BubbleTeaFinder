@@ -54,4 +54,14 @@ extension ViewController: UITableViewDataSource {
     
     return cell
   }
+    
+    func fetchAndReload() {
+        
+        do {
+            venues = try coreDataStack.context.executeFetchRequest(fetchRequest) as! [Venue]
+            tableView.reloadData()
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
+    }
 }
