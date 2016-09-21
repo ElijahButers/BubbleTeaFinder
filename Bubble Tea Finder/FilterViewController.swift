@@ -31,6 +31,8 @@ class FilterViewController: UITableViewController {
   @IBOutlet weak var nameZASortCell: UITableViewCell!
   @IBOutlet weak var distanceSortCell: UITableViewCell!
   @IBOutlet weak var priceSortCell: UITableViewCell!
+    
+    var coreDataStack: CoreDataStack!
   
 
   //MARK - UITableViewDelegate methods
