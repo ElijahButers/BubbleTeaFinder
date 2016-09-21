@@ -24,7 +24,7 @@ class ViewController: UIViewController {
     
     let model = coreDataStack.context.persistentStoreCoordinator!.managedObjectModel
     fetchRequest = model.fetchRequestTemplateForName("FetchRequest")
-    //fetchAndReload() method
+    fetchAndReload()
   }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
