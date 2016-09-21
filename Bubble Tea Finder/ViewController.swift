@@ -59,8 +59,9 @@ extension ViewController: UITableViewDataSource {
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCellWithIdentifier(venueCellIdentifier)!
-    cell.textLabel!.text = "Bubble Tea Venue"
-    cell.detailTextLabel!.text = "Price Info"
+    let venue = venues[indexPath.row]
+    cell.textLabel!.text = venue.name
+    cell.detailTextLabel!.text = venue.priceInfo?.priceCategory
     
     return cell
   }
