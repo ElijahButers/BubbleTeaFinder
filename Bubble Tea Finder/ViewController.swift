@@ -53,7 +53,7 @@ extension ViewController: UITableViewDataSource {
   
   func tableView(tableView: UITableView,
     numberOfRowsInSection section: Int) -> Int {
-    return 10
+    return venues.count
   }
 
   
