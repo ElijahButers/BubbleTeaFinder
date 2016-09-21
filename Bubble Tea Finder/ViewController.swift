@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 let filterViewControllerSegueIdentifier = "toFilterViewController"
 let venueCellIdentifier = "VenueCell"
