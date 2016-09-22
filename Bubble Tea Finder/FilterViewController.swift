@@ -34,6 +34,12 @@ class FilterViewController: UITableViewController {
     
     var coreDataStack: CoreDataStack!
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        populateCheapVenueCountLabel()
+    }
+    
     lazy var cheapVenuePredicate: NSPredicate = {
         var predicate = NSPredicate(format: "priceInfo.priceCategory == %@", "$")
         return predicate
