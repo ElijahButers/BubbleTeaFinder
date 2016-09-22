@@ -39,6 +39,22 @@ class FilterViewController: UITableViewController {
         return predicate
     }()
   
+    func populateCheapVenueCountLabel() {
+        
+        // $ fetch request
+        let fetchRequest = NSFetchRequest(entityName: "Venue")
+        fetchRequest.resultType = .CountResultType
+        fetchRequest.predicate = cheapVenuePredicate
+        
+        do {
+            let results = try coreDataStack.context.executeFetchRequest(fetchRequest) as! [NSNumber]
+            
+            let count = results.first!.integerValue
+            firstPriceCategoryLabel.text = "\(count) bubble tea places"
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
+    }
 
   //MARK - UITableViewDelegate methods
   
