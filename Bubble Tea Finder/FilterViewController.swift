@@ -33,6 +33,11 @@ class FilterViewController: UITableViewController {
   @IBOutlet weak var priceSortCell: UITableViewCell!
     
     var coreDataStack: CoreDataStack!
+    
+    lazy var cheapVenuePredicate: NSPredicate = {
+        var predicate = NSPredicate(format: "priceInfo.priceCategory == %@", "$")
+        return predicate
+    }()
   
 
   //MARK - UITableViewDelegate methods
