@@ -45,7 +45,7 @@ class FilterViewController: UITableViewController {
         return predicate
     }()
     
-    lazy var moderateVenuePrecicate: NSPredicate = {
+    lazy var moderateVenuePredicate: NSPredicate = {
         var predicate = NSPredicate(format: "priceInfo.priceCategory == %@", "$$")
         return predicate
     }()
@@ -62,6 +62,22 @@ class FilterViewController: UITableViewController {
             
             let count = results.first!.integerValue
             firstPriceCategoryLabel.text = "\(count) bubble tea places"
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
+    }
+    
+    func populateModerateVenueCountLabel() {
+        
+        // $$ fetch request
+        let fetchRequest = NSFetchRequest(entityName: "Venue")
+        fetchRequest.resultType = .CountResultType
+        fetchRequest.predicate = moderateVenuePredicate
+        
+        do {
+            let results = try coreDataStack.context.executeFetchRequest(fetchRequest) as! [NSNumber]
+            let count = results.first?.integerValue
+            secondPriceCategoryLabel.text = "\(count) bubble tea places"
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
         }
