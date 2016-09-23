@@ -76,7 +76,7 @@ class FilterViewController: UITableViewController {
         
         do {
             let results = try coreDataStack.context.executeFetchRequest(fetchRequest) as! [NSNumber]
-            let count = results.first?.integerValue
+            let count = results.first!.integerValue
             secondPriceCategoryLabel.text = "\(count) bubble tea places"
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
