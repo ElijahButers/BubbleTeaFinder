@@ -144,3 +144,7 @@ class FilterViewController: UITableViewController {
     dismissViewControllerAnimated(true, completion:nil)
   }
 }
+
+protocol FilterViewControllerDelegate: class {
+    func filterViewController(filter: FilterViewController, didSelectPredicate predicate: NSPredicate?, sortDescriptor: NSSortDescriptor?)
+}
