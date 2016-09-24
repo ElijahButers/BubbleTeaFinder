@@ -22,8 +22,7 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    let model = coreDataStack.context.persistentStoreCoordinator!.managedObjectModel
-    fetchRequest = model.fetchRequestTemplateForName("FetchRequest")
+    fetchRequest = NSFetchRequest(entityName: "Venue")
     fetchAndReload()
   }
   
