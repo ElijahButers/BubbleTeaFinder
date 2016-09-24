@@ -114,7 +114,7 @@ class FilterViewController: UITableViewController {
         let sumExpressionDesc = NSExpressionDescription()
         sumExpressionDesc.name = "sumDeals"
         
-        sumExpressionDesc.expression = NSExpression(forFunction: "sum", arguments: [NSExpression(forKeyPath: "specialCount")])
+        sumExpressionDesc.expression = NSExpression(forFunction: "sum:", arguments: [NSExpression(forKeyPath: "specialCount")])
         sumExpressionDesc.expressionResultType = .Integer32AttributeType
         
         fetchRequest.propertiesToFetch = [sumExpressionDesc]
@@ -124,7 +124,7 @@ class FilterViewController: UITableViewController {
             
             let resultDict = results.first!
             let numDeals = resultDict["sumDeals"]
-            numDealsLabel.text = "\(numDeals) total deals"
+            numDealsLabel.text = "\(numDeals!) total deals"
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
         }
