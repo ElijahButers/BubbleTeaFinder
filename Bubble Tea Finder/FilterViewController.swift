@@ -164,6 +164,13 @@ class FilterViewController: UITableViewController {
         selectedPredicate = moderateVenuePredicate
     case expensiveVenueCell:
         selectedPredicate = expensiveVenuePredicate
+        // Most Popular section
+    case offeringDealCell:
+        selectedPredicate = offeringDealPredicate
+    case walkingDistanceCell:
+        selectedPredicate = walkingDistancePredicate
+    case userTipsCell:
+        selectedPredicate = hasUserTipsPredicate
     default:
         print("default case")
     }
