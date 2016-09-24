@@ -72,4 +72,19 @@ extension ViewController: UITableViewDataSource {
 
 extension ViewController: FilterViewControllerDelegate {
     
+    func filterViewController(filter: FilterViewController, didSelectPredicate predicate: NSPredicate?, sortDescriptor: NSSortDescriptor?) {
+        
+        fetchRequest.predicate = nil
+        fetchRequest.sortDescriptors = nil
+        
+        if let fetchPredicate = predicate {
+            fetchRequest.predicate = fetchPredicate
+        }
+        
+        if let sr = sortDescriptor {
+            fetchRequest.sortDescriptors = [sr]
+        }
+        
+        fetchAndReload()
+    }
 }
