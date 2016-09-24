@@ -105,6 +105,30 @@ class FilterViewController: UITableViewController {
             print("Could not fetch \(error), \(error?.userInfo)")
         }
     }
+    
+    func populateDealsCountLabel() {
+        
+        let fetchRequest = NSFetchRequest(entityName: "Venue")
+        fetchRequest.resultType = .DictionaryResultType
+        
+        let sumExpressionDesc = NSExpressionDescription()
+        sumExpressionDesc.name = "sumDeals"
+        
+        sumExpressionDesc.expression = NSExpression(forFunction: "sum", arguments: [NSExpression(forKeyPath: "specialCount")])
+        sumExpressionDesc.expressionResultType = .Integer32AttributeType
+        
+        fetchRequest.propertiesToFetch = [sumExpressionDesc]
+        
+        do {
+            let results = try coreDataStack.context.executeFetchRequest(fetchRequest) as! [NSDictionary]
+            
+            let resultDict = results.first!
+            let numDeals = resultDict["sumDeals"]
+            numDealsLabel.text = "\(numDeals) total deals"
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
+    }
 
   //MARK - UITableViewDelegate methods
   
