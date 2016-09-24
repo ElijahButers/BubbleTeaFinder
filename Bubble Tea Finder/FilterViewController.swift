@@ -39,6 +39,7 @@ class FilterViewController: UITableViewController {
         
         populateCheapVenueCountLabel()
         populateModerateVenueCountLabel()
+        populateExpensiveVenueCountLabel()
     }
     
     lazy var cheapVenuePredicate: NSPredicate = {
