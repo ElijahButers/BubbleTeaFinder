@@ -88,6 +88,22 @@ class FilterViewController: UITableViewController {
             print("Could not fetch \(error), \(error.userInfo)")
         }
     }
+    
+    func populateExpensiveVenueCountLabel() {
+        
+        // $$$ fetch request
+        let fetchRequest = NSFetchRequest(entityName: "Venue")
+        fetchRequest.predicate = expensiveVenuePredicate
+        
+        var error: NSError?
+        let count = coreDataStack.context.countForFetchRequest(fetchRequest, error: &error)
+        
+        if count != NSNotFound {
+            thirdPriceCategoryLabel.text = "\(count) bubble tea places"
+        } else {
+            print("Could not fetch \(error), \(error?.userInfo)")
+        }
+    }
 
   //MARK - UITableViewDelegate methods
   
