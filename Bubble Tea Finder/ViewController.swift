@@ -69,3 +69,7 @@ extension ViewController: UITableViewDataSource {
     return cell
   }
 }
+
+extension ViewController: FilterViewControllerDelegate {
+    
+}
