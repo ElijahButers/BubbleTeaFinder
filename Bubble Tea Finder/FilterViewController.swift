@@ -61,6 +61,12 @@ class FilterViewController: UITableViewController {
         var predicate = NSPredicate(format: "priceInfo.priceCategory == %@", "$$$")
         return predicate
     }()
+    
+    // Additional filter predicates
+    lazy var offeringDealPredicate: NSPredicate = {
+        var pr = NSPredicate(format: "specialCount > 0")
+        return pr
+    }()
   
     func populateCheapVenueCountLabel() {
         
