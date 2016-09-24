@@ -34,6 +34,10 @@ class FilterViewController: UITableViewController {
     
     var coreDataStack: CoreDataStack!
     
+    weak var delegate: FilterViewControllerDelegate?
+    var selectedSortDescriptor: NSSortDescriptor?
+    var selectedPredicate: NSPredicate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
