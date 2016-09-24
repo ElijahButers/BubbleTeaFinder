@@ -139,6 +139,20 @@ class FilterViewController: UITableViewController {
   
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     
+    let cell = tableView.cellForRowAtIndexPath(indexPath)!
+    
+    switch cell {
+    case cheapVenueCell:
+        selectedPredicate = cheapVenuePredicate
+    case moderateVenueCell:
+        selectedPredicate = moderateVenuePredicate
+    case expensiveVenueCell:
+        selectedPredicate = expensiveVenuePredicate
+    default:
+        print("default case")
+    }
+    
+    cell.accessoryType = .Checkmark
   }
   
   // MARK - UIButton target action
