@@ -34,6 +34,7 @@ class ViewController: UIViewController {
         let navController = segue.destinationViewController as! UINavigationController
         let filterVC = navController.topViewController as! FilterViewController
         filterVC.coreDataStack = coreDataStack
+        filterVC.delegate = self
     }
   }
     
