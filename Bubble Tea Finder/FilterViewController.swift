@@ -72,6 +72,11 @@ class FilterViewController: UITableViewController {
         var pr = NSPredicate(format: "location.distance < 500")
         return pr
     }()
+    
+    lazy var hasUserTipsPredicate: NSPredicate = {
+        var pr = NSPredicate(format: "stats.tipCount > 0")
+        return pr
+    }()
   
     func populateCheapVenueCountLabel() {
         
