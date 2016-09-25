@@ -18,6 +18,7 @@ class ViewController: UIViewController {
   var coreDataStack: CoreDataStack!
     var fetchRequest: NSFetchRequest!
     var venues: [Venue]!
+    var asyncFetchRequest: NSAsynchronousFetchResult!
   
   override func viewDidLoad() {
     super.viewDidLoad()
