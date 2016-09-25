@@ -89,6 +89,11 @@ class FilterViewController: UITableViewController {
         var sd = NSSortDescriptor(key: "location.distance", ascending: true)
         return sd
     }()
+    
+    lazy var priceSortDescriptor: NSSortDescriptor = {
+        var sd = NSSortDescriptor(key: "priceInfo.priceCategory", ascending: true)
+        return sd
+    }()
   
     func populateCheapVenueCountLabel() {
         
