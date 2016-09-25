@@ -77,6 +77,13 @@ class FilterViewController: UITableViewController {
         var pr = NSPredicate(format: "stats.tipCount > 0")
         return pr
     }()
+    
+    // Sort descriptors
+    
+    lazy var nameSortDescriptor: NSSortDescriptor = {
+        var sd = NSSortDescriptor(key: "name", ascending: true, selector: #selector(NSString.localizedStandardCompare(_:)))
+        return sd
+    }()
   
     func populateCheapVenueCountLabel() {
         
