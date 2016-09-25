@@ -188,6 +188,15 @@ class FilterViewController: UITableViewController {
         selectedPredicate = walkingDistancePredicate
     case userTipsCell:
         selectedPredicate = hasUserTipsPredicate
+        //Sort By section
+    case nameAZSortCell:
+        selectedSortDescriptor = nameSortDescriptor
+    case nameZASortCell:
+        selectedSortDescriptor = nameSortDescriptor.reversedSortDescriptor as? NSSortDescriptor
+    case distanceSortCell:
+        selectedSortDescriptor = distanceSortDescriptor
+    case priceSortCell:
+        selectedSortDescriptor = priceSortDescriptor
     default:
         print("default case")
     }
