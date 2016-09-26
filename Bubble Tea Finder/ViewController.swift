@@ -23,6 +23,19 @@ class ViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    let batchUpdate = NSBatchUpdateRequest(entityName: "Venue")
+    
+    batchUpdate.propertiesToUpdate = ["favorite" : NSNumber(bool: true)]
+    batchUpdate.affectedStores = coreDataStack.context.persistentStoreCoordinator!.persistentStores
+    batchUpdate.resultType = .UpdatedObjectsCountResultType
+    
+    do {
+        let batchResult = try coreDataStack.context.executeRequest(batchUpdate) as! NSBatchUpdateResult
+        print("Records updated \(batchResult.result!)")
+    } catch let error as NSError {
+        print("Could not update \(error), \(error.userInfo)")
+    }
+    
     fetchRequest = NSFetchRequest(entityName: "Venue")
     
     asyncFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { [unowned self] (result: NSAsynchronousFetchResult) -> Void in
