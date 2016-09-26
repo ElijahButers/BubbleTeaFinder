@@ -24,7 +24,17 @@ class ViewController: UIViewController {
     super.viewDidLoad()
     
     fetchRequest = NSFetchRequest(entityName: "Venue")
-    fetchAndReload()
+    
+    asyncFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { [unowned self] (result: NSAsynchronousFetchResult) -> Void in
+        self.venues = result.finalResult as! [Venue]
+        self.tableView.reloadData()
+    }
+    
+    do {
+        try coreDataStack.context.executeRequest(asyncFetchRequest)
+    } catch let error as NSError {
+        print("Could not fetch \(error), \(error.userInfo)")
+    }
   }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
