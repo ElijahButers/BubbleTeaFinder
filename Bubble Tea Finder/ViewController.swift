@@ -16,9 +16,9 @@ class ViewController: UIViewController {
   
   @IBOutlet weak var tableView: UITableView!
   var coreDataStack: CoreDataStack!
-    var fetchRequest: NSFetchRequest<AnyObject>!
+    var fetchRequest: NSFetchRequest<Venue>!
     var venues: [Venue]! = []
-    var asyncFetchRequest: NSAsynchronousFetchRequest<AnyObject>!
+    var asyncFetchRequest: NSAsynchronousFetchRequest<Venue>!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -38,8 +38,12 @@ class ViewController: UIViewController {
     
     fetchRequest = NSFetchRequest(entityName: "Venue")
     
-    asyncFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { [unowned self] (result: NSAsynchronousFetchResult) -> Void in
-        self.venues = result.finalResult as! [Venue]
+    asyncFetchRequest = NSAsynchronousFetchRequest(fetchRequest: fetchRequest) { [unowned self] (result: NSAsynchronousFetchResult) in
+        
+        guard let venues = result.finalResult else {
+            return
+        }
+        self.venues = venues
         self.tableView.reloadData()
     }
     
@@ -64,7 +68,7 @@ class ViewController: UIViewController {
     func fetchAndReload() {
         
         do {
-            venues = try coreDataStack.context.fetch(fetchRequest) as! [Venue]
+            venues = try coreDataStack.context.fetch(fetchRequest)
             tableView.reloadData()
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
