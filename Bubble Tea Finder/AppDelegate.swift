@@ -16,9 +16,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   lazy var  coreDataStack = CoreDataStack()
   
   
-  func application(application: UIApplication,
+  func application(_ application: UIApplication,
     didFinishLaunchingWithOptions
-    launchOptions: [NSObject: AnyObject]?) -> Bool {
+    launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
       
       importJSONSeedDataIfNeeded()
       
@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       return true
   }
   
-  func applicationWillTerminate(application: UIApplication) {
+  func applicationWillTerminate(_ application: UIApplication) {
     coreDataStack.saveContext()
   }
   
@@ -39,18 +39,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var error: NSError? = nil
     
     let results =
-    coreDataStack.context.countForFetchRequest(fetchRequest,
+    coreDataStack.context.count(for: fetchRequest,
       error: &error)
     
     if (results == 0) {
       
       do {
         let results =
-        try coreDataStack.context.executeFetchRequest(fetchRequest) as! [Venue]
+        try coreDataStack.context.fetch(fetchRequest) as! [Venue]
         
         for object in results {
           let team = object as Venue
-          coreDataStack.context.deleteObject(team)
+          coreDataStack.context.delete(team)
         }
         
         coreDataStack.saveContext()
@@ -63,47 +63,47 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
   
   func importJSONSeedData() {
-    let jsonURL = NSBundle.mainBundle().URLForResource("seed", withExtension: "json")
-    let jsonData = NSData(contentsOfURL: jsonURL!)
+    let jsonURL = Bundle.main.url(forResource: "seed", withExtension: "json")
+    let jsonData = try? Data(contentsOf: jsonURL!)
 
-    let venueEntity = NSEntityDescription.entityForName("Venue", inManagedObjectContext: coreDataStack.context)
-    let locationEntity = NSEntityDescription.entityForName("Location", inManagedObjectContext: coreDataStack.context)
-    let categoryEntity = NSEntityDescription.entityForName("Category", inManagedObjectContext: coreDataStack.context)
-    let priceEntity = NSEntityDescription.entityForName("PriceInfo", inManagedObjectContext: coreDataStack.context)
-    let statsEntity = NSEntityDescription.entityForName("Stats", inManagedObjectContext: coreDataStack.context)
+    let venueEntity = NSEntityDescription.entity(forEntityName: "Venue", in: coreDataStack.context)
+    let locationEntity = NSEntityDescription.entity(forEntityName: "Location", in: coreDataStack.context)
+    let categoryEntity = NSEntityDescription.entity(forEntityName: "Category", in: coreDataStack.context)
+    let priceEntity = NSEntityDescription.entity(forEntityName: "PriceInfo", in: coreDataStack.context)
+    let statsEntity = NSEntityDescription.entity(forEntityName: "Stats", in: coreDataStack.context)
     
     do {
-      let jsonDict = try NSJSONSerialization.JSONObjectWithData(jsonData!, options: .AllowFragments) as! NSDictionary
-      let jsonArray = jsonDict.valueForKeyPath("response.venues") as! NSArray
+      let jsonDict = try JSONSerialization.jsonObject(with: jsonData!, options: .allowFragments) as! NSDictionary
+      let jsonArray = jsonDict.value(forKeyPath: "response.venues") as! NSArray
       
       for jsonDictionary in jsonArray {
         
         let venueName = jsonDictionary["name"] as? String
-        let venuePhone = jsonDictionary.valueForKeyPath("contact.phone") as? String
-        let specialCount = jsonDictionary.valueForKeyPath("specials.count") as? NSNumber
+        let venuePhone = (jsonDictionary as AnyObject).value(forKeyPath: "contact.phone") as? String
+        let specialCount = (jsonDictionary as AnyObject).value(forKeyPath: "specials.count") as? NSNumber
         
         let locationDict = jsonDictionary["location"] as! NSDictionary
         let priceDict = jsonDictionary["price"] as! NSDictionary
         let statsDict = jsonDictionary["stats"] as! NSDictionary
         
-        let location = Location(entity: locationEntity!, insertIntoManagedObjectContext: coreDataStack.context)
+        let location = Location(entity: locationEntity!, insertInto: coreDataStack.context)
         location.address = locationDict["address"] as? String
         location.city = locationDict["city"] as? String
         location.state = locationDict["state"] as? String
         location.zipcode = locationDict["postalCode"] as? String
         location.distance = locationDict["distance"] as? NSNumber
         
-        let category = Category(entity: categoryEntity!, insertIntoManagedObjectContext: coreDataStack.context)
+        let category = Category(entity: categoryEntity!, insertInto: coreDataStack.context)
         
-        let priceInfo = PriceInfo(entity: priceEntity!, insertIntoManagedObjectContext: coreDataStack.context)
+        let priceInfo = PriceInfo(entity: priceEntity!, insertInto: coreDataStack.context)
         priceInfo.priceCategory = priceDict["currency"] as? String
         
-        let stats = Stats(entity: statsEntity!, insertIntoManagedObjectContext: coreDataStack.context)
+        let stats = Stats(entity: statsEntity!, insertInto: coreDataStack.context)
         stats.checkinsCount = statsDict["checkinsCount"] as? NSNumber
         stats.usersCount = statsDict["userCount"] as? NSNumber
         stats.tipCount = statsDict["tipCount"] as? NSNumber
         
-        let venue = Venue(entity: venueEntity!, insertIntoManagedObjectContext: coreDataStack.context)
+        let venue = Venue(entity: venueEntity!, insertInto: coreDataStack.context)
         venue.name = venueName
         venue.phone = venuePhone
         venue.specialCount = specialCount

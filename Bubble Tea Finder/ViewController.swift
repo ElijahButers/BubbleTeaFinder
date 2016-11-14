@@ -16,21 +16,21 @@ class ViewController: UIViewController {
   
   @IBOutlet weak var tableView: UITableView!
   var coreDataStack: CoreDataStack!
-    var fetchRequest: NSFetchRequest!
+    var fetchRequest: NSFetchRequest<AnyObject>!
     var venues: [Venue]! = []
-    var asyncFetchRequest: NSAsynchronousFetchRequest!
+    var asyncFetchRequest: NSAsynchronousFetchRequest<AnyObject>!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     let batchUpdate = NSBatchUpdateRequest(entityName: "Venue")
     
-    batchUpdate.propertiesToUpdate = ["favorite" : NSNumber(bool: true)]
+    batchUpdate.propertiesToUpdate = ["favorite" : NSNumber(value: true as Bool)]
     batchUpdate.affectedStores = coreDataStack.context.persistentStoreCoordinator!.persistentStores
-    batchUpdate.resultType = .UpdatedObjectsCountResultType
+    batchUpdate.resultType = .updatedObjectsCountResultType
     
     do {
-        let batchResult = try coreDataStack.context.executeRequest(batchUpdate) as! NSBatchUpdateResult
+        let batchResult = try coreDataStack.context.execute(batchUpdate) as! NSBatchUpdateResult
         print("Records updated \(batchResult.result!)")
     } catch let error as NSError {
         print("Could not update \(error), \(error.userInfo)")
@@ -44,17 +44,17 @@ class ViewController: UIViewController {
     }
     
     do {
-        try coreDataStack.context.executeRequest(asyncFetchRequest)
+        try coreDataStack.context.execute(asyncFetchRequest)
     } catch let error as NSError {
         print("Could not fetch \(error), \(error.userInfo)")
     }
   }
   
-  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     
     if segue.identifier == filterViewControllerSegueIdentifier {
         
-        let navController = segue.destinationViewController as! UINavigationController
+        let navController = segue.destination as! UINavigationController
         let filterVC = navController.topViewController as! FilterViewController
         filterVC.coreDataStack = coreDataStack
         filterVC.delegate = self
@@ -64,29 +64,29 @@ class ViewController: UIViewController {
     func fetchAndReload() {
         
         do {
-            venues = try coreDataStack.context.executeFetchRequest(fetchRequest) as! [Venue]
+            venues = try coreDataStack.context.fetch(fetchRequest) as! [Venue]
             tableView.reloadData()
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
         }
     }
   
-  @IBAction func unwindToVenuListViewController(segue: UIStoryboardSegue) {
+  @IBAction func unwindToVenuListViewController(_ segue: UIStoryboardSegue) {
     
   }
 }
 
 extension ViewController: UITableViewDataSource {
   
-  func tableView(tableView: UITableView,
+  func tableView(_ tableView: UITableView,
     numberOfRowsInSection section: Int) -> Int {
     return venues.count
   }
 
   
-  func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-    let cell = tableView.dequeueReusableCellWithIdentifier(venueCellIdentifier)!
-    let venue = venues[indexPath.row]
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(withIdentifier: venueCellIdentifier)!
+    let venue = venues[(indexPath as NSIndexPath).row]
     cell.textLabel!.text = venue.name
     cell.detailTextLabel!.text = venue.priceInfo?.priceCategory
     
@@ -96,7 +96,7 @@ extension ViewController: UITableViewDataSource {
 
 extension ViewController: FilterViewControllerDelegate {
     
-    func filterViewController(filter: FilterViewController, didSelectPredicate predicate: NSPredicate?, sortDescriptor: NSSortDescriptor?) {
+    func filterViewController(_ filter: FilterViewController, didSelectPredicate predicate: NSPredicate?, sortDescriptor: NSSortDescriptor?) {
         
         fetchRequest.predicate = nil
         fetchRequest.sortDescriptors = nil

@@ -99,13 +99,13 @@ class FilterViewController: UITableViewController {
         
         // $ fetch request
         let fetchRequest = NSFetchRequest(entityName: "Venue")
-        fetchRequest.resultType = .CountResultType
+        fetchRequest.resultType = .countResultType
         fetchRequest.predicate = cheapVenuePredicate
         
         do {
-            let results = try coreDataStack.context.executeFetchRequest(fetchRequest) as! [NSNumber]
+            let results = try coreDataStack.context.fetch(fetchRequest) as! [NSNumber]
             
-            let count = results.first!.integerValue
+            let count = results.first!.intValue
             firstPriceCategoryLabel.text = "\(count) bubble tea places"
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
@@ -116,12 +116,12 @@ class FilterViewController: UITableViewController {
         
         // $$ fetch request
         let fetchRequest = NSFetchRequest(entityName: "Venue")
-        fetchRequest.resultType = .CountResultType
+        fetchRequest.resultType = .countResultType
         fetchRequest.predicate = moderateVenuePredicate
         
         do {
-            let results = try coreDataStack.context.executeFetchRequest(fetchRequest) as! [NSNumber]
-            let count = results.first!.integerValue
+            let results = try coreDataStack.context.fetch(fetchRequest) as! [NSNumber]
+            let count = results.first!.intValue
             secondPriceCategoryLabel.text = "\(count) bubble tea places"
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
@@ -135,7 +135,7 @@ class FilterViewController: UITableViewController {
         fetchRequest.predicate = expensiveVenuePredicate
         
         var error: NSError?
-        let count = coreDataStack.context.countForFetchRequest(fetchRequest, error: &error)
+        let count = coreDataStack.context.count(for: fetchRequest, error: &error)
         
         if count != NSNotFound {
             thirdPriceCategoryLabel.text = "\(count) bubble tea places"
@@ -147,18 +147,18 @@ class FilterViewController: UITableViewController {
     func populateDealsCountLabel() {
         
         let fetchRequest = NSFetchRequest(entityName: "Venue")
-        fetchRequest.resultType = .DictionaryResultType
+        fetchRequest.resultType = .dictionaryResultType
         
         let sumExpressionDesc = NSExpressionDescription()
         sumExpressionDesc.name = "sumDeals"
         
         sumExpressionDesc.expression = NSExpression(forFunction: "sum:", arguments: [NSExpression(forKeyPath: "specialCount")])
-        sumExpressionDesc.expressionResultType = .Integer32AttributeType
+        sumExpressionDesc.expressionResultType = .integer32AttributeType
         
         fetchRequest.propertiesToFetch = [sumExpressionDesc]
         
         do {
-            let results = try coreDataStack.context.executeFetchRequest(fetchRequest) as! [NSDictionary]
+            let results = try coreDataStack.context.fetch(fetchRequest) as! [NSDictionary]
             
             let resultDict = results.first!
             let numDeals = resultDict["sumDeals"]
@@ -170,9 +170,9 @@ class FilterViewController: UITableViewController {
 
   //MARK - UITableViewDelegate methods
   
-  override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+  override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     
-    let cell = tableView.cellForRowAtIndexPath(indexPath)!
+    let cell = tableView.cellForRow(at: indexPath)!
     
     switch cell {
     case cheapVenueCell:
@@ -201,19 +201,19 @@ class FilterViewController: UITableViewController {
         print("default case")
     }
     
-    cell.accessoryType = .Checkmark
+    cell.accessoryType = .checkmark
   }
   
   // MARK - UIButton target action
   
-  @IBAction func saveButtonTapped(sender: UIBarButtonItem) {
+  @IBAction func saveButtonTapped(_ sender: UIBarButtonItem) {
     
     delegate?.filterViewController(self, didSelectPredicate: selectedPredicate, sortDescriptor: selectedSortDescriptor)
     
-    dismissViewControllerAnimated(true, completion:nil)
+    dismiss(animated: true, completion:nil)
   }
 }
 
 protocol FilterViewControllerDelegate: class {
-    func filterViewController(filter: FilterViewController, didSelectPredicate predicate: NSPredicate?, sortDescriptor: NSSortDescriptor?)
+    func filterViewController(_ filter: FilterViewController, didSelectPredicate predicate: NSPredicate?, sortDescriptor: NSSortDescriptor?)
 }
